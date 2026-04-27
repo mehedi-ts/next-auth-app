@@ -1,17 +1,30 @@
+"use client";
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 
 const Navbar = () => {
+  const { data, isPending } = authClient.useSession();
+  console.log(data);
   const links = (
     <>
       <li>
         <Link href="/">Home</Link>
       </li>
-      <li>
-        <Link href="/auth/signup">SignUp</Link>
-      </li>
-      <li>
-        <Link href="/auth/signin">SignIn</Link>
-      </li>
+      {data ? (
+        <div>
+          <p>welcome :{data.user.name}</p>
+          <p
+            onClick={async () => await authClient.signOut()}
+            className=" underline cursor-pointer"
+          >
+            Signout
+          </p>
+        </div>
+      ) : (
+        <li>
+          <Link href="/auth/signin">SignIn</Link>
+        </li>
+      )}
     </>
   );
   return (
